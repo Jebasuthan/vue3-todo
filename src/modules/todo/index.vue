@@ -24,11 +24,11 @@
               <td>{{contact.name}}</td>
               <td>{{contact.mobile}}</td>
               <td>
-                <button class="actionBtn" type="button" @click="editContact(contact, index)">Edit</button>
-                <button class="actionBtn" type="button" @click="deleteContact(index)">Delete</button>
+                <button class="actionBtn" type="button" @click="updateContact(contact, index)">Edit</button>
+                <button class="actionBtn" type="button" @click="removeContact(index)">Delete</button>
               </td>
             </tr>
-            <tr v-if="listContacts.length === 0">
+            <tr v-if="!listContacts || listContacts.length === 0">
               <td colspan="4">No Contact Found</td>
             </tr>
           </tbody>
@@ -45,7 +45,7 @@
           </small>
         </div>
         <div class="form-fields">
-          <input name="mobile" v-model="contact.mobile" type="text" placeholder="Mobile">
+          <input name="mobile" v-model="contact.mobile" type="text" placeholder="Mobile" v-on:input="formatMobileNumber(contact.mobile)" >
           <small class="error" v-for="(error, index) of v$.contact.mobile.$errors" :key="index">
             {{ formatModalName(error.$property) }} {{formatMessage(error.$message)}}
           </small>
@@ -63,6 +63,7 @@
   </div>
 </template>
 <script>
+import { mapState, mapActions } from 'vuex'
 import Welcome from '@/components/Welcome'
 import useVuelidate from '@vuelidate/core'
 import { required, minLength } from '@vuelidate/validators'
@@ -79,16 +80,6 @@ export default {
   data() {
     return {
       showContact: true,
-      listContacts: [
-        {
-          name: 'Jeba',
-          mobile: '953543545'
-        },
-        {
-          name: 'Suthan',
-          mobile: '9234234234'
-        }
-      ],
       contact: {
         name: '',
         mobile: ''
@@ -103,7 +94,14 @@ export default {
       }
     }
   },
+  computed: mapState({
+    listContacts: state => state.todo.listContacts
+  }),
+  created () {
+    this.$store.dispatch('todo/getListContact')
+  },
   methods: {
+    ...mapActions('todo', ['addContact', 'editContact', 'deleteContact']),
     addNewContact() {
       this.showContact = false
     },
@@ -114,27 +112,27 @@ export default {
       return lowercaseFirstLetter(string)
     },
     formatMobileNumber (phone) {
-      this.mobile = formatPhoneNumber(phone)
+      this.contact.mobile = formatPhoneNumber(phone)
     },
     onSubmit() {
       this.v$.$touch()
       if (this.v$.$error) return
       if (this.isEdit) {
-        this.listContacts[this.editIndex] = this.contact
+        this.editContact(this.contact)
       } else {
-        this.listContacts.push(this.contact)
+        this.addContact(this.contact)
       }
       this.reset()
     },
-    editContact(contact, index) {
+    updateContact(contact, index) {
       this.isEdit = true
       this.editIndex = index
       this.showContact = false
-      this.contact = contact
+      this.contact = Object.assign({}, contact)
     },
-    deleteContact(index) {
+    removeContact(index) {
       if (confirm('Are you sure wants to delete?')) {
-        this.listContacts.splice(index, 1)
+        this.deleteContact(index)
       }
     },
     cancel() {

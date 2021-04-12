@@ -1,9 +1,17 @@
 import { createWebHistory, createRouter } from 'vue-router'
-import { getStore } from '@/config/Utils'
+import store from '@/store'
 import Home from '@/modules/home'
 import Login from '@/modules/login'
 import Register from '@/modules/register'
 import Todo from '@/modules/todo'
+
+const authGuard = (to, from, next) => {
+  if (store.getters['user/isAuthenticated']) {
+    next()
+  } else {
+    next('/login')
+  }
+}
 
 const routes = [
   {
@@ -15,9 +23,7 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home,
-    meta: {
-      requiredAuth: true
-    }
+    beforeEnter: authGuard
   },
   {
     path: '/register',
@@ -28,9 +34,7 @@ const routes = [
     path: '/todo',
     name: 'Todo',
     component: Todo,
-    meta: {
-      requiredAuth: true
-    }
+    beforeEnter: authGuard
   },
   {
     path: '/:pathMatch(.*)*',
@@ -41,18 +45,6 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
-})
-
-router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiredAuth)) {
-    if (!getStore('user')) {
-      next({
-        path: '/login'
-      })
-      return
-    }
-  }
-  next()
 })
 
 export default router

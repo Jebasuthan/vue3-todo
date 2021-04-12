@@ -44,9 +44,10 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import { email, required, minLength } from '@vuelidate/validators'
-import { setStore, formatPhoneNumber, capitalizeFirstLetter, lowercaseFirstLetter } from  '@/config/Utils'
+import { formatPhoneNumber, capitalizeFirstLetter, lowercaseFirstLetter } from  '@/config/Utils'
 import router from '@/router'
 
 export default {
@@ -75,6 +76,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('user', ['userLogin']),
     formatModalName(string) {
       return capitalizeFirstLetter(string)
     },
@@ -85,9 +87,9 @@ export default {
       this.user.mobile = formatPhoneNumber(phone)
     },
     onSubmit: function() {
-      this.v$.$touch();
-      if (this.v$.$error) return;
-      setStore('user', JSON.stringify(this.user))
+      this.v$.$touch()
+      if (this.v$.$error) return
+      this.userLogin(this.user)
       router.push('/home')
     }
   }

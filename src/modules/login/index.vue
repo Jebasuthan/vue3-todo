@@ -30,6 +30,7 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import { email, required, minLength } from '@vuelidate/validators'
 import { getStore, capitalizeFirstLetter, lowercaseFirstLetter } from  '@/config/Utils'
@@ -54,6 +55,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions('user', ['userLogin']),
     formatModalName(string) {
       return capitalizeFirstLetter(string)
     },
@@ -67,7 +69,8 @@ export default {
       console.log(user)
       if (user) {
         if (user.email == this.email && user.password == this.password) {
-          router.push('/home')
+          this.userLogin(user)
+          router.push('/todo')
           return
         }
       }
