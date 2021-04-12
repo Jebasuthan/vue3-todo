@@ -1,6 +1,6 @@
 # Vue3 Application
 
-Simple and Pure Vue3 application with features like User Registration, Login, Vue-Router4, User Authentication Route, Todo Tutorial with CRUD Operations and Vuelidate form validations without any other external libraries.
+Simple and Pure Vue3 application with features like User Registration, Login, Vue-Router4, Auth Guard, User Authentication Route, Vuex4, Todo Tutorial with CRUD Operations and Vuelidate form validations without any other external libraries.
 
 ## Project setup
 ```
@@ -17,11 +17,13 @@ npm run serve
 2. User Registration
 3. Login
 4. Vue Router v4
-5. Vue Router with Authentication
-6. Vuelidate (Form Validations)
-7. Individual Components and Modules
-8. No other external libraries
-9. Custom Utils functions (Format Phone (111) 111–1111), & localstorage, ... etc)
+5. Auth Guard
+6. Vue Router with Authentication
+7. Vuelidate (Form Validations)
+8. Vuex4
+9. Individual Components and Modules
+10. No other external libraries
+11. Custom Utils functions (Format Phone (111) 111–1111), & localstorage, ... etc)
 
 ## Screen Shots
 
