@@ -12,6 +12,8 @@ npm install
 npm run serve
 ```
 
+## [DEMO](https://jebasuthan.github.io/vue3-todo/)
+
 ## Features available in the application:
 1. Perfect Folder Structure
 2. User Registration
